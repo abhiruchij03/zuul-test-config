@@ -2,18 +2,18 @@
     name: check
     manager: independent
     trigger:
-      gerrit:
+      github:
         - event: patchset-created
     start:
       mqtt:
         topic: "{tenant}/zuul_start/{pipeline}/{project}/{branch}"
     success:
-      gerrit:
+      github:
         Verified: 1
       mqtt:
         topic: "{tenant}/zuul_buildset/{pipeline}/{project}/{branch}"
     failure:
-      gerrit:
+      github:
         Verified: -1
       mqtt:
         topic: "{tenant}/zuul_buildset/{pipeline}/{project}/{branch}"
