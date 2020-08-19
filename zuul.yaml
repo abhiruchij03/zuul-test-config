@@ -1,26 +1,19 @@
 - pipeline:
     name: check
-    description: |
-      Newly opened pull requests enter this pipeline to receive an
-      initial verification
     manager: independent
     trigger:
-      github:
-        - event: pull_request
-          action:
-            - opened
-            - changed
-            - reopened
-        - event: pull_request
-          action: comment
-          comment: (?i)^\s*recheck\s*$
+      gerrit:
+        - event: patchset-created
     start:
-      github:
-        status: pending
-        comment: false
+      mqtt:
+        topic: "{tenant}/zuul_start/{pipeline}/{project}/{branch}"
     success:
-      github:
-        status: 'success'
+      gerrit:
+        Verified: 1
+      mqtt:
+        topic: "{tenant}/zuul_buildset/{pipeline}/{project}/{branch}"
     failure:
-      github:
-        status: 'failure'
+      gerrit:
+        Verified: -1
+      mqtt:
+        topic: "{tenant}/zuul_buildset/{pipeline}/{project}/{branch}"
